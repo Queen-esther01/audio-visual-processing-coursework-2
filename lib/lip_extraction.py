@@ -5,10 +5,12 @@ Created on Sun Nov 23 16:10:05 2025
 
 @author: becca
 """
+import os
 
 import numpy as np
 import cv2
-from utils import Utils
+from lib.utils import Utils
+
 
 
 class LipExtraction:
@@ -17,6 +19,7 @@ class LipExtraction:
         cap = cv2.VideoCapture(video_file)
         frame_index = 0
         frames = []
+
 
         while True:
             success, frame = cap.read()
@@ -35,9 +38,11 @@ class LipExtraction:
 
     def extract_lip_cords(self, img):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # /yourproject/lib
+        ROOT_DIR = os.path.dirname(BASE_DIR)
+        CASCADE_PATH = os.path.join(ROOT_DIR, "src", "haarcascade_mcs_mouth.xml")
         # Load the Haar cascade for mouth detection
-        mouth_cascade = cv2.CascadeClassifier("haarcascade_mcs_mouth.xml")
+        mouth_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 
         if mouth_cascade.empty():
             print("Cascade failed to load. Check path.")
@@ -63,7 +68,7 @@ class LipExtraction:
         return cords
 
     def optimized_cords(self, mouth_range):
-        print("Finding best cord", len(mouth_range))
+        # print("Finding best cord", len(mouth_range))
         xs = [x for (x, y, w, h) in mouth_range]
         ys = [y for (x, y, w, h) in mouth_range]
         xws = [x + w for (x, y, w, h) in mouth_range]
@@ -84,7 +89,7 @@ class LipExtraction:
             return
 
         x, y, w, h = cords
-        print(x, y, w, h)
+        # print(x, y, w, h)
 
         x, y, w, h = cords
         y1, y2 = y, y + h
