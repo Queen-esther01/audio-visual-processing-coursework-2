@@ -24,21 +24,6 @@ class VideoFeatures:
         # Utils.draw_tmp(img, img_new)
         return features
 
-    def apply_dct_21(s_image):
-        # s_image = lip ROI (BGR)
-        if s_image.ndim == 3:
-            img = cv2.cvtColor(s_image, cv2.COLOR_BGR2GRAY)
-        else:
-            img = s_image
-
-        img = cv2.resize(img, (32, 32))
-        img_float = np.float32(img)
-        img_dct = cv2.dct(img_float)
-
-        # take small block e.g. 5x5 = 25 coeffs, then keep 21
-        block = img_dct[:5, :5].flatten()  # length 25
-        feats = block[:21]  # length 21
-        return feats
 
     def features_by_video(self, frames, name):
         frame_feats = []

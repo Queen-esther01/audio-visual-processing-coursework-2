@@ -16,18 +16,19 @@ def visual_feature_interp(visual_feat, audio_feat):
         visual_feat_interp: visual features that match the number of frames of the audio feature
     """
 
-    return visual_feat
+
     if audio_feat is None or visual_feat is None:
         return None
 
     audio_timesteps = audio_feat.shape[0]
+    print('visual_feat shape:', visual_feat.shape)
 
     # Initialize an array to store interpolated visual features
-    visual_feat_interp = np.zeros((audio_timesteps, visual_feat.shape[1]))
+    visual_feat_interp = np.zeros((audio_timesteps, visual_feat.shape[0]))
 
-    for feature_dim in range(visual_feat.shape[1]):
+    for feature_dim in range(visual_feat.shape[0]):
         cubicSpline = CubicSpline(np.arange(visual_feat.shape[0]), visual_feat[:, feature_dim])
-        visual_feat_interp[:, feature_dim] = cubicSpline(np.linspace(0, visual_feat.shape[0] - 1, audio_timesteps))
+        visual_feat_interp[:, feature_dim] = cubicSpline(np.linspace(0, visual_feat.shape[0], audio_timesteps))
 
     return visual_feat_interp
 
